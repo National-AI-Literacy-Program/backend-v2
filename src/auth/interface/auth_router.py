@@ -10,5 +10,5 @@ async def register(
     request: RegisterRequest,
     use_case: RegisterUser = Depends(get_register_use_case)
 ):
-    user = await use_case.execute(request.email, request.password)
+    user = await use_case.execute(request.email)
     return UserOut.model_validate(user)
