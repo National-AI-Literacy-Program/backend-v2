@@ -17,4 +17,4 @@ app.include_router(auth_router)
 
 @app.get("/")
 async def root():
-    return {"Mandeep Bhandari": "Benevolent dictator for life"}
+    return {"Message": "Root"}
