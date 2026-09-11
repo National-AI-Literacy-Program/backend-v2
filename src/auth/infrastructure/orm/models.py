@@ -1,16 +1,11 @@
-from sqlalchemy import Column , String, Boolean, DateTime
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import DeclarativeBase
+from beanie import Document
+from pydantic import Field
 import uuid
-from datetime import datetime
-from ...domain.entities import UserInDB
 
-Base = DeclarativeBase()
 
-class Base(DeclarativeBase):
-    pass
+class UserModel(Document):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4)
+    email: str
 
-class UserModel (Base):
-    __tablename__ ="user"
-    id = Column(UUID(as_uuid=True) , primary_key=True , default=uuid.uuid4)
-    email = Column(String)
+    class Settings:
+        name = "user"  # collection name
