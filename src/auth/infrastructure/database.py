@@ -5,7 +5,7 @@ from pymongo.server_api import ServerApi
 from beanie import init_beanie
 from dotenv import load_dotenv
 
-from .orm.models import UserModel
+from .orm.models import UserModel,UserInfoModel
 
 load_dotenv()
 
@@ -23,5 +23,5 @@ async def init_db():
     await client.admin.command("ping")
     await init_beanie(
         database=client[MONGO_DB_NAME],
-        document_models=[UserModel],
+        document_models=[UserModel,UserInfoModel],
     )

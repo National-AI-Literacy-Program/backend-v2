@@ -1,11 +1,47 @@
-from pydantic import BaseModel , EmailStr
+
+from datetime import datetime
 from uuid import UUID
 
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
+
+
+# ---------- Registration ----------
+
 class RegisterRequest(BaseModel):
-    email:EmailStr
+    email: EmailStr
+
 
 class UserOut(BaseModel):
-    id:UUID
-    email:EmailStr
+    id: UUID
+    email: EmailStr
 
-    model_config = {"from_attributes": True}
+    model_config = ConfigDict(from_attributes=True)
+
+
+# ---------- Progress data ----------
+
+class MCQResultSchema(BaseModel):
+    qn: int = Field(ge=1)
+    correct: bool
+
+
+class DayProgressSchema(BaseModel):
+    day: int = Field(ge=1)
+    completed: bool = False
+    mcq: list[MCQResultSchema] = Field(default_factory=list)
+    completed_at: datetime | None = None
+
+
+# ---------- Progress update request ----------
+
+class UserInfoUpdateRequest(BaseModel):
+    progress: list[DayProgressSchema] = Field(default_factory=list)
+
+
+# ---------- Progress response ----------
+
+class UserInfoOut(BaseModel):
+    id: UUID
+    progress: list[DayProgressSchema] = Field(default_factory=list)
+
+    model_config = ConfigDict(from_attributes=True)
