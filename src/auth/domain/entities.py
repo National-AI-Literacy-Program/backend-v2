@@ -12,6 +12,9 @@ class User(BaseModel):
 class UserInDB(User):
     id: UUID
 
+class UserLogin(User):
+    pass
+
 
 class MCQResult(BaseModel):
     qn: int = Field(ge=0)

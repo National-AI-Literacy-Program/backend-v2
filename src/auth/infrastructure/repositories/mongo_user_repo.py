@@ -20,6 +20,19 @@ class MongoUserRepository(IUserRepository):
             email=db_user.email,
         )
 
+    async def login_user(self, user: User) -> UserInDB:
+        db_user = await UserModel.find_one(
+            UserModel.email == user.email
+        )
+
+        if db_user is None:
+            return await self.create_user(user)
+
+        return UserInDB(
+            id=db_user.id,
+            email=db_user.email,
+        )
+
 
 class MongoUserInfoRepository(IUserInfoRepository):
     async def update_user_info(

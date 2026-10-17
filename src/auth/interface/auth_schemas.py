@@ -17,6 +17,14 @@ class UserOut(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
+# ---------- Login ----------
+class LoginRequest(BaseModel):
+    email:EmailStr
+
+class LoginResponse(BaseModel):
+    id: UUID
+    email: EmailStr
+    model_config = ConfigDict(from_attributes=True)
 
 # ---------- Progress data ----------
 

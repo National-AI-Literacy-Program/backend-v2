@@ -8,14 +8,18 @@ from .auth_schemas import (
     UserOut,
     UserInfoUpdateRequest,
     UserInfoOut,
-)
+    LoginRequest,
+    LoginResponse
+    )
 from .dependencies import (
     get_register_use_case,
     get_update_use_case,
+    get_login_use_case
 )
 from ..application.use_cases.register_user import RegisterUser
 from ..application.use_cases.update_user_info import UpdateUserInfo
-from ..domain.entities import UserInfo
+from ..application.use_cases.login import LoginUser
+from ..domain.entities import UserInfo , User
 
 router = APIRouter(tags=["auth"], prefix="/auth")
 
@@ -63,3 +67,19 @@ async def update_progress(
             ],
         }
     )
+from fastapi import APIRouter, Depends, status
+
+
+@router.post(
+    "/login",
+    response_model=LoginResponse,
+    status_code=status.HTTP_200_OK,
+)
+async def login(
+    request: LoginRequest,
+    use_case: LoginUser = Depends(get_login_use_case),
+):
+    user = User(email=request.email)
+    logged_in_user = await use_case.execute(user)
+
+    return LoginResponse.model_validate(logged_in_user)

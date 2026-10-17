@@ -7,6 +7,10 @@ class IUserRepository(ABC):
     async def create_user(self, user:User) ->UserInDB:
         ...
 
+    @abstractmethod
+    async def login_user(self, user:User) -> UserInDB:
+        ...
+
 class IUserInfoRepository(ABC):
     @abstractmethod
     async def update_user_info(self, user_info:UserInfo) ->UserInfoInDB:
