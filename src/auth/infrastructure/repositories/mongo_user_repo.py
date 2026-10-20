@@ -1,13 +1,21 @@
-
 from ...domain.entities import User, UserInDB, UserInfo, UserInfoInDB
 from ...domain.repository import IUserRepository, IUserInfoRepository
 from ...infrastructure.orm.models import UserModel, UserInfoModel
-
+from pymongo.errors import DuplicateKeyError
+from ...domain.exceptions import EmailAlreadyExistsError
 
 class MongoUserRepository(IUserRepository):
     async def create_user(self, user: User) -> UserInDB:
-        db_user = UserModel(email=user.email)
-        await db_user.insert()
+        email = str(user.email).strip().lower()
+
+        db_user = UserModel(email=email)
+
+        try:
+            await db_user.insert()
+        except DuplicateKeyError as exc:
+            raise EmailAlreadyExistsError(
+                "An account with this email already exists"
+            ) from exc
 
         db_user_info = UserInfoModel(
             id=db_user.id,

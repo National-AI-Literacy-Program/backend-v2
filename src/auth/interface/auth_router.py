@@ -21,6 +21,9 @@ from ..application.use_cases.update_user_info import UpdateUserInfo
 from ..application.use_cases.login import LoginUser
 from ..domain.entities import UserInfo , User
 
+from fastapi import HTTPException
+from ..domain.exceptions import EmailAlreadyExistsError
+
 router = APIRouter(tags=["auth"], prefix="/auth")
 
 
@@ -33,7 +36,13 @@ async def register(
     request: RegisterRequest,
     use_case: RegisterUser = Depends(get_register_use_case),
 ):
-    user = await use_case.execute(request.email)
+    try:
+        user = await use_case.execute(request.email)
+    except EmailAlreadyExistsError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=str(exc),
+        ) from exc
     return UserOut.model_validate(user)
 
 

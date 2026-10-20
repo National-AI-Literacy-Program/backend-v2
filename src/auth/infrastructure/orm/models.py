@@ -26,13 +26,22 @@ class DayProgress(BaseModel):
         return v
 
 
+from beanie import Document
+from pydantic import EmailStr, Field
+from pymongo import ASCENDING, IndexModel
+
+
 class UserModel(Document):
-    id: UUID = Field(default_factory=uuid4)
-    email: str
+    email: EmailStr
 
     class Settings:
         name = "user"
-
+        indexes = [
+            IndexModel(
+                [("email", ASCENDING)],
+                unique=True,
+            ),
+        ]
 
 class UserInfoModel(Document):
     id: UUID
