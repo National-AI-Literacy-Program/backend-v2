@@ -28,15 +28,14 @@ class LoginResponse(BaseModel):
 
 # ---------- Progress data ----------
 
-class MCQResultSchema(BaseModel):
-    qn: int = Field(ge=1)
-    correct: bool
+
 
 
 class DayProgressSchema(BaseModel):
     day: int = Field(ge=1)
     completed: bool = False
-    mcq: list[MCQResultSchema] = Field(default_factory=list)
+    total_question: int
+    missed_question: int 
     completed_at: datetime | None = None
 
 
