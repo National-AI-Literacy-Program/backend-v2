@@ -16,7 +16,12 @@ app.include_router(auth_router)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000","https://www.sikaai.org"],
+    allow_origins=[
+        "http://localhost:3000",
+        "http://learn.localhost:3000",
+        "http://127.0.0.1:3000",
+        "https://sikkai.org",
+    ],
     allow_methods=["*"],
     allow_headers=["*"],
 )
