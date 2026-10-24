@@ -2,6 +2,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from .auth.interface.auth_router import router as auth_router
 from .auth.infrastructure.database import init_db
+from fastapi.middleware.cors import CORSMiddleware
 
 
 @asynccontextmanager
@@ -13,6 +14,12 @@ app = FastAPI(lifespan=lifespan)
 
 app.include_router(auth_router)
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000","https://www.sikaai.org"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/")
