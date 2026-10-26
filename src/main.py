@@ -21,6 +21,7 @@ app.add_middleware(
         "http://learn.localhost:3000",
         "http://127.0.0.1:3000",
         "https://sikkai.org",
+        "https://learn.sikaai.org/"
     ],
     allow_methods=["*"],
     allow_headers=["*"],
