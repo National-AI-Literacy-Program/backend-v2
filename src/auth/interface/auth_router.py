@@ -89,6 +89,14 @@ async def login(
     use_case: LoginUser = Depends(get_login_use_case),
 ):
     user = User(email=request.email)
+
     logged_in_user = await use_case.execute(user)
 
-    return LoginResponse.model_validate(logged_in_user)
+    return LoginResponse(
+        id=logged_in_user.id,
+        email=logged_in_user.email,
+        progress=[
+            item.model_dump()
+            for item in logged_in_user.progress
+        ],
+    )

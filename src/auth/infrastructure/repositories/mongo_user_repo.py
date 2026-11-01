@@ -1,10 +1,11 @@
-from ...domain.entities import User, UserInDB, UserInfo, UserInfoInDB
+from ...domain.entities import User, UserInDB, UserInfo, UserInfoInDB,UserLogin
 from ...domain.repository import IUserRepository, IUserInfoRepository
 from ...infrastructure.orm.models import UserModel, UserInfoModel
 from pymongo.errors import DuplicateKeyError
 from ...domain.exceptions import EmailAlreadyExistsError
 
 class MongoUserRepository(IUserRepository):
+
     async def create_user(self, user: User) -> UserInDB:
         email = str(user.email).strip().lower()
 
@@ -28,18 +29,41 @@ class MongoUserRepository(IUserRepository):
             email=db_user.email,
         )
 
-    async def login_user(self, user: User) -> UserInDB:
+    async def login_user(self, user: User) -> UserLogin:
+        email = str(user.email).strip().lower()
+
         db_user = await UserModel.find_one(
-            UserModel.email == user.email
+            UserModel.email == email
         )
 
         if db_user is None:
-            return await self.create_user(user)
+            created_user = await self.create_user(user)
 
-        return UserInDB(
+            return UserLogin(
+                id=created_user.id,
+                email=created_user.email,
+                progress=[]
+            )
+
+        db_user_info = await UserInfoModel.find_one(
+            UserInfoModel.id == db_user.id
+        )
+
+        progress_data = []
+
+        if db_user_info is not None:
+            progress_data = [
+                item.model_dump()
+                for item in db_user_info.progress
+            ]
+
+        return UserLogin(
             id=db_user.id,
             email=db_user.email,
+            progress=progress_data
         )
+
+  
 
 
 class MongoUserInfoRepository(IUserInfoRepository):

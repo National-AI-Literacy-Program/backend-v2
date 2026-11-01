@@ -12,8 +12,6 @@ class User(BaseModel):
 class UserInDB(User):
     id: UUID
 
-class UserLogin(User):
-    pass
 
 
 
@@ -21,7 +19,7 @@ class DayProgress(BaseModel):
     day: int = Field(ge=0)
     completed: bool = False
     total_question: int
-    missed_question: int 
+    missed_question: int
     completed_at: datetime | None = None
 
 
@@ -41,3 +39,7 @@ class UserInfo(BaseModel):
 
 class UserInfoInDB(UserInfo):
     model_config = ConfigDict(from_attributes=True)
+
+
+class UserLogin(UserInDB):
+    progress: list[DayProgress] = Field(default_factory=list)
