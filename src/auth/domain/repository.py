@@ -23,11 +23,7 @@ class IUserRepository(ABC):
 
 class IUserInfoRepository(ABC):
 
-    @abstractmethod
-    async def get_user_info(
-        self, user_id: UUID
-    ) -> UserInfoInDB | None:
-        ...
+    
 
     @abstractmethod
     async def update_user_info(
